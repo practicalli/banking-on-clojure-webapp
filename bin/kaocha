@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+## Script to run the kaocha test runner
+## for unit tests and clojure spec generative tests
+
+clojure -A:test:runner-kaocha "$@"
