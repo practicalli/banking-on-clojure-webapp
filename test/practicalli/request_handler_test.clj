@@ -4,7 +4,7 @@
             [ring.mock.request :as mock]))
 
 (deftest welcome-page-test
-  (testing "Testing elements on the accounts overview page"
+  (testing "Testing elements on the welcome page"
     (is (= 200
            (:status (SUT/welcome-page (mock/request :get "/")))))))
 
