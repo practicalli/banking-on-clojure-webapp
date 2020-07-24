@@ -44,26 +44,27 @@
 
 (defn welcome-page
   [request]
-  (html5
-    {:lang "en"}
-    [:head
-     (include-css "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css")]
-    [:body
-     [:section {:class "hero is-info"}
-      [:div {:class "hero-body"}
-       [:div {:class "container"}
-        [:h1 {:class "title"} "Banking on Clojure"]
-        [:p {:class "subtitle"}
-         "Making your money immutable"]]]]
+  (response
+    (html5
+      {:lang "en"}
+      [:head
+       (include-css "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css")]
+      [:body
+       [:section {:class "hero is-info"}
+        [:div {:class "hero-body"}
+         [:div {:class "container"}
+          [:h1 {:class "title"} "Banking on Clojure"]
+          [:p {:class "subtitle"}
+           "Making your money immutable"]]]]
 
-     [:section {:class "section"}
-      [:div {:class "container"}
-       (link-to {:class "button is-primary"} "/accounts"    "Login")
-       (link-to {:class "button is-danger"}  "/register" "Register")
-       [:p {:class "content"}
-        "Manage your money without unexpected side-effects using a simple made easy banking service"]
-       [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]]]
-     ]))
+       [:section {:class "section"}
+        [:div {:class "container"}
+         (link-to {:class "button is-primary"} "/accounts"    "Login")
+         (link-to {:class "button is-danger"}  "/register" "Register")
+         [:p {:class "content"}
+          "Manage your money without unexpected side-effects using a simple made easy banking service"]
+         [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]]]
+       ])))
 
 (defn register-account-holder
   [request]
