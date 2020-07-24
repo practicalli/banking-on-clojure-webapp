@@ -2,6 +2,18 @@ version: 2.1  # circleci configuration version
 
 orbs:
   kaocha: lambdaisland/kaocha@0.0.1 # Org settings > Security > uncertified orbs
+  heroku: circleci/heroku@0.0.10. # Invoke the Heroku orb
+
+workflows:
+  heroku_deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
+          requires:
+            - build
+          filters:
+            branches:
+              only: live
 
 jobs:    # basic units of work in a run
   build: # runs not using Workflows must have a `build` job as entry point
