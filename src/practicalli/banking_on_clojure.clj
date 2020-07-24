@@ -9,10 +9,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes app
-  (GET "/" [] handler/welcome-page)
+  (GET "/"         [] handler/welcome-page)
   (GET "/accounts" [] handler/accounts-overview-page)
   (GET "/account"  [] handler/account-history)
-  (GET "/transfer"  [] handler/money-transfer)
+  (GET "/transfer" [] handler/money-transfer)
   (GET "/payment"  [] handler/money-payment)
 
   (GET "/register" [] handler/register-account-holder) )
