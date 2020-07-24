@@ -37,5 +37,5 @@
 
   :uberjar
   {:extra-deps {seancorfield/depstar {:mvn/version "1.0.94"}}
-   :main-opts  ["-m" "hf.depstar.uberjar" "banking-on-clojure-webapp.jar"
-                "-C" "-m" "practicalli.banking-on-clojure-webapp"]}}}
+   :main-opts  ["-m" "hf.depstar.uberjar" "banking-on-clojure.jar"
+                "-C" "-m" "practicalli.banking-on-clojure"]}}}
