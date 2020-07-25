@@ -2,7 +2,8 @@
   (:gen-class)
   (:require [org.httpkit.server :as app-server]
             [compojure.core :refer [defroutes GET POST]]
-            [practicalli.request-handler :as handler]))
+            [practicalli.request-handler :as handler]
+            [practicalli.specifications-banking]))
 
 
 ;; Request Routing
