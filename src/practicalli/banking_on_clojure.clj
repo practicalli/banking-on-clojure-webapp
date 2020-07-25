@@ -1,9 +1,12 @@
 (ns practicalli.banking-on-clojure
   (:gen-class)
-  (:require [org.httpkit.server :as app-server]
-            [compojure.core :refer [defroutes GET POST]]
-            [practicalli.request-handler :as handler]
-            [practicalli.specifications-banking]))
+  (:require
+   [org.httpkit.server :as app-server]
+   [compojure.core :refer [defroutes GET POST]]
+   [practicalli.request-handler :as handler]
+
+   ;; Specifications - for kaocha discovery
+   [practicalli.specifications-banking]))
 
 
 ;; Request Routing
