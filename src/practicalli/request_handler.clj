@@ -6,7 +6,8 @@
   (:require [ring.util.response :refer [response]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5 include-js include-css]]
-            [hiccup.element :refer [link-to]]))
+            [hiccup.element :refer [link-to]]
+            [practicalli.database-access :as data-store]))
 
 
 ;; Markup Generators
@@ -70,9 +71,10 @@
   [request]
   (response (html [:div
                    [:h1 "Banking on Clojure"]
+                   [:p
+                    "New account holder" (data-store/register-account-holder
+                                           )]
                    [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]])))
-
-
 
 
 (defn accounts-overview-page
