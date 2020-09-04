@@ -75,6 +75,17 @@
 ;; could also use `clojure.core/run!` instead of `doseq`
 
 
+(defn show-schema
+  [db-spec table-name]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc/execute! connection [(str "SHOW COLUMNS FROM " table-name)])))
+
+
+(defn drop-table
+  [db-spec table-name]
+  (with-open [connection (jdbc/get-datasource db-spec)]
+    (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
+
 
 
 ;; REPL Driven Development
