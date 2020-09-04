@@ -52,11 +52,28 @@
 ;; Also helps with the maintenance of the database overall.
 
 
-(defn register-account-holder
-  [customer-details]
-  (assoc customer-details
-         :practicalli.specifications-banking/account-id
-         (java.util.UUID/randomUUID)))
+
+;; Database schema - helper functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: remove `with-open` when using a connection pool
+;; pass pool connection to `jdbc/with-transaction`
+
+
+(defn create-tables
+  "Establish a connection to the data source and create all tables within a transaction.
+  Close the database connection.
+  Arguments:
+  - table-schemas: a vector of sql statements, each creating a table"
+  [table-schemas data-spec]
+
+  (with-open [connection (jdbc/get-connection data-spec)]
+    (jdbc/with-transaction [transaction connection]
+      (doseq [sql-statement table-schemas]
+        (jdbc/execute! transaction sql-statement) ))))
+
+;; could also use `clojure.core/run!` instead of `doseq`
+
 
 
 
