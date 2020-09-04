@@ -1,5 +1,6 @@
 (ns practicalli.database-access
-  (:require [next.jdbc :as jdbc]))
+  (:require [next.jdbc :as jdbc]
+            [next.jdbc.specs :as jdbc-spec]))
 
 
 ;; Database specification and connection
@@ -153,3 +154,8 @@
     ["drop table contacts"])
 
   )
+;; Instrument specifications
+
+(comment
+
+  (jdbc-spec/instrument))
