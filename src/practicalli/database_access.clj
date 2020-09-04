@@ -87,6 +87,31 @@
     (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
 
 
+(comment  ;; Managing Schemas
+
+  (create-table schema-transaction-history-table
+                db-specification-dev)
+
+  ;; Create all tables in the development database
+  (create-tables [schema-account-holders-table schema-accounts-table schema-transaction-history-table]
+                 db-specification-dev)
+
+  ;; View application table schema in development database
+  (show-schema db-specification-dev "PUBLIC.ACCOUNT_HOLDERS")
+  (show-schema db-specification-dev "PUBLIC.ACCOUNTS")
+  (show-schema db-specification-dev "PUBLIC.TRANSACTION_HISTORY")
+
+  ;; View database system schema in development database
+  (show-schema db-specification-dev "INFORMATION_SCHEMA.TABLES")
+
+  ;; Remove tables from the development database
+  (drop-table db-specification-dev "PUBLIC.ACCOUNT_HOLDERS")
+  (drop-table db-specification-dev "PUBLIC.ACCOUNTS")
+  (drop-table db-specification-dev "PUBLIC.TRANSACTION_HISTORY")
+
+  )
+
+
 
 ;; REPL Driven Development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
