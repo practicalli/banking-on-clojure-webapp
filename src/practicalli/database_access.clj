@@ -5,11 +5,10 @@
 ;; Database specification and connection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Development environment
 ;; H2 in-memory database
-(def db-specification {:dbtype "h2" :dbname "banking-on-clojure"})
+(def db-specification-dev {:dbtype "h2" :dbname "banking-on-clojure"})
 
-;; Database connection
-(def data-source (jdbc/get-datasource db-specification))
 
 ;; Database schema
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
