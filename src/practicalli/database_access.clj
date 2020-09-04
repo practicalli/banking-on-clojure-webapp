@@ -11,6 +11,46 @@
 ;; Database connection
 (def data-source (jdbc/get-datasource db-specification))
 
+;; Database schema
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; define the schema to create tables
+;; define a function to open a database connect, create all table schema as a transaction and then close the connection.
+
+
+(def schema-account-holders-table
+  ["CREATE TABLE PUBLIC.ACCOUNT_HOLDERS(
+     ACCOUNT_HOLDER_ID UUID(16) NOT NULL,
+     FIRST_NAME VARCHAR(32),
+     LAST_NAME VARCHAR(32),
+     EMAIL_ADDRESS VARCHAR(32),
+     RESIDENTIAL_ADDRESS VARCHAR(255),
+     SOCIAL_SECURITY_NUMBER VARCHAR(32),
+     CONSTRAINT ACCOUNT_HOLDERS_PK PRIMARY KEY (ACCOUNT_HOLDER_ID))"])
+
+(def schema-accounts-table
+  ["CREATE TABLE PUBLIC.ACCOUNTS(
+     ACCOUNT_ID UUID(16) NOT NULL,
+     ACCOUNT_NUMBER INTEGER NOT NULL AUTO_INCREMENT,
+     ACCOUNT_SORT_CODE VARCHAR(6),
+     ACCOUNT_NAME VARCHAR(32),
+     CURRENT_BALANCE VARCHAR(255),
+     LAST_UPDATED DATE,
+     ACCOUNT_HOLDER_ID VARCHAR(100) NOT NULL,
+     CONSTRAINT ACCOUNTS_PK PRIMARY KEY (ACCOUNT_ID))"] )
+
+(def schema-transaction-history-table
+  ["CREATE TABLE PUBLIC.TRANSACTION_HISTORY(
+     TRANSACTION_ID UUID(16) NOT NULL,
+     TRANSACTION_REFERENCE VARCHAR(32),
+     TRANSACTION_DATE DATE,
+     ACCOUNT_NUMBER INTEGER,
+     CONSTRAINT TRANSACTION_HISTORY_PK PRIMARY KEY (TRANSACTION_ID))"])
+
+
+;; Using meaningful constraint names as they will appear in error messages and make issues easier to trace.
+;; Also helps with the maintenance of the database overall.
+
 
 (defn register-account-holder
   [customer-details]
