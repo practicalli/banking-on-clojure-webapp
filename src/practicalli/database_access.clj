@@ -60,11 +60,12 @@
 ;; pass pool connection to `jdbc/with-transaction`
 
 
-(defn create-tables
+(defn create-tables!
   "Establish a connection to the data source and create all tables within a transaction.
   Close the database connection.
   Arguments:
-  - table-schemas: a vector of sql statements, each creating a table"
+  - table-schemas: a vector of sql statements, each creating a table
+  - data-spec: next.jdbc database specification"
   [table-schemas data-spec]
 
   (with-open [connection (jdbc/get-connection data-spec)]
@@ -83,7 +84,7 @@
 
 (defn drop-table
   [db-spec table-name]
-  (with-open [connection (jdbc/get-datasource db-spec)]
+  (with-open [connection (jdbc/get-connection db-spec)]
     (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
 
 
@@ -93,8 +94,8 @@
                 db-specification-dev)
 
   ;; Create all tables in the development database
-  (create-tables [schema-account-holders-table schema-accounts-table schema-transaction-history-table]
-                 db-specification-dev)
+  (create-tables! [schema-account-holders-table schema-accounts-table schema-transaction-history-table]
+                  db-specification-dev)
 
   ;; View application table schema in development database
   (show-schema db-specification-dev "PUBLIC.ACCOUNT_HOLDERS")
