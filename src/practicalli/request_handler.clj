@@ -71,9 +71,7 @@
   [request]
   (response (html [:div
                    [:h1 "Banking on Clojure"]
-                   [:p
-                    "New account holder" (data-store/register-account-holder
-                                           )]
+                   [:p "New account holder" ]
                    [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]])))
 
 
