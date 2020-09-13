@@ -1,6 +1,10 @@
 (ns practicalli.database-access
   (:require [next.jdbc :as jdbc]
+            [next.jdbc.sql :as jdbc-sql]
             [next.jdbc.specs :as jdbc-spec]))
+
+;; Clojure specifications
+[practicalli.specifications-banking]
 
 
 ;; Database specification and connection
@@ -113,48 +117,137 @@
   )
 
 
-
-;; REPL Driven Development
+;; Create, Read, Update, Delete
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn create-record
+  "Insert a single record into the database using a managed connection.
+  Arguments:
+  - table - name of database table to be affected
+  - record-data - Clojure data representing a new record
+  - db-spec - database specification to establish a connection"
+  [db-spec table record-data]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc-sql/insert! connection table record-data)))
+
+
+;; Inserting multiple records
+
+(defn create-records
+  "Insert a single record into the database using a managed connection.
+  Arguments:
+  - table - name of database table to be affected
+  - columns - vector of column names for which values are provided
+  - record-data - Clojure vector representing a new records
+  - db-spec - database specification to establish a connection"
+  [db-spec table columns record-data]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc-sql/insert-multi! connection table columns record-data)))
+
+
+(defn read-record
+  "Insert a single record into the database using a managed connection.
+  Arguments:
+  - table - name of database table to be affected
+  - record-data - Clojure data representing a new record
+  - db-spec - database specification to establish a connection"
+  [db-spec sql-query]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc-sql/query connection sql-query)))
+
+
+(defn update-record
+  "Insert a single record into the database using a managed connection.
+  Arguments:
+  - table - name of database table to be affected
+  - record-data - Clojure data representing a new record
+  - db-spec - database specification to establish a connection
+  - where-clause - column and value to identify a record to update"
+  [db-spec table record-data where-clause]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc-sql/update! connection table record-data where-clause)))
+
+
+(defn delete-record
+  "Insert a single record into the database using a managed connection.
+  Arguments:
+  - table - name of database table to be affected
+  - record-data - Clojure data representing a new record
+  - db-spec - database specification to establish a connection"
+  [db-spec table where-clause]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc-sql/delete! connection table where-clause)))
+
+
 
 (comment
 
-  ;; Create a table called contacts
-  ;; Creates .mv.db file if not already present
+  ;; Create account holder
+  (create-record db-specification-dev
+                 "public.account_holders"
+                 {:account_holder_id      (java.util.UUID/randomUUID)
+                  :first_name             "Rachel"
+                  :last_name              "Rocketpack"
+                  :email_address          "rach@rocketpack.org"
+                  :residential_address    "1 Ultimate Question Lane, Altar IV"
+                  :social_security_number "BB104312D"})
 
-  (jdbc/execute!
-    data-source
-    ["create table account-holders(
-     id int auto_increment primary key,
-     name varchar(32),
-     email varchar(255))"])
+  (read-record db-specification-dev ["select * from public.account_holders"])
+  (read-record db-specification-dev ["select * from public.account_holders where first_name = ?" "Rachel"])
+  (read-record db-specification-dev ["select * from public.account_holders where account_holder_id = ?" "f6d6c3ba-c5cc-49de-8c85-21904f8c5b4d"])
 
-  ;;=> [#:next.jdbc{:update-count 0}]
+  (update-record db-specification-dev
+                 :public.account_holders
+                 {:email_address "rachel+update2@rockketpack.org"}
+                 {:account_holder_id "f6d6c3ba-c5cc-49de-8c85-21904f8c5b4d"})
+  ;; => #:next.jdbc{:update-count 1}
 
+  (delete-record db-specification-dev :public.account_holders {:account_holder_id "f6d6c3ba-c5cc-49de-8c85-21904f8c5b4d"})
+  ;; => #:next.jdbc{:update-count 1}
 
-  ;; Add a contact to the database
-
-  (jdbc/execute!
-    data-source
-    ["insert into contacts(name,email)
-    values('Jenny Jetpack','jenny@jetpack.org')"])
-  ;; => [#:next.jdbc{:update-count 1}]
-
-
-  ;; Select all contacts from the database
-
-  (jdbc/execute!
-    data-source
-    ["select * from contacts"])
-  ;; => [#:CONTACTS{:ID 1, :NAME "Jenny Jetpack", :EMAIL "jenny@jetpack.org"}]
+  (read-record db-specification-dev ["select * from public.account_holders where account_holder_id = ?" "f6d6c3ba-c5cc-49de-8c85-21904f8c5b4d"])
+  ;; => [#:ACCOUNT_HOLDERS{:ACCOUNT_HOLDER_ID #uuid "f6d6c3ba-c5cc-49de-8c85-21904f8c5b4d", :FIRST_NAME "Rachel", :LAST_NAME "Rocketpack", :EMAIL_ADDRESS "rachel+update@rockketpack.org", :RESIDENTIAL_ADDRESS "1 Ultimate Question Lane, Altar IV", :SOCIAL_SECURITY_NUMBER "BB104312D"}]
 
 
-  ;; Delete all contacts by deleting the table
-  (jdbc/execute!
-    data-source
-    ["drop table contacts"])
+  ;; Create account
+  (create-record db-specification-dev
+                 "public.accounts"
+                 {:account_id        (java.util.UUID/randomUUID)
+                  :account_number    "1234567890"
+                  :account_sort_code "102010"
+                  :account_name      "Current"
+                  :current_balance   100
+                  :last_updated      "2020-09-11"
+                  :account_holder_id (java.util.UUID/randomUUID)})
+
+
+  (read-record db-specification-dev ["select * from public.accounts where account_number = ?" "1234567890"])
+
+  ;; Create transaction
+  (create-record db-specification-dev
+                 "public.transaction_history"
+                 {:transaction_id        (java.util.UUID/randomUUID)
+                  :transaction_reference "Salary"
+                  :transaction_date      "2020-09-11"
+                  :account_number        "1234567890"})
+
+  (read-record db-specification-dev ["select * from public.transaction_history"])
+  (read-record db-specification-dev ["select * from public.transaction_history where transaction_reference = ?" "Salary"])
+  ;; => [#:TRANSACTION_HISTORY{:TRANSACTION_ID #uuid "8ac89cfc-6874-4ebe-9ee4-59b8c5e971ff", :TRANSACTION_REFERENCE "Salary", :TRANSACTION_DATE #inst "2020-09-10T23:00:00.000-00:00", :ACCOUNT_NUMBER 1234567890}]
+  (read-record db-specification-dev ["select * from public.transaction_history where transaction_date = ?" "2020-09-11"])
+
+
+
+  ;; Mock data from specifications
+  ;; TODO:
+  ;; - require banking specifications namespace
+  ;; - call mock-data-* functions  mock-data-customer-details
+  ;; (practicalli.specifications-banking/mock-data-customer-details)
+
 
   )
+
+
 ;; Instrument specifications
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Require the `next.jdbc.specs` library as jdbc-spec
