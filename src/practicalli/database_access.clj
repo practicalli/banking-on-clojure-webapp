@@ -122,7 +122,11 @@
   - db-spec - database specification to establish a connection"
   [db-spec table record-data]
   (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/insert! connection table record-data)))
+    (jdbc-sql/insert!
+      connection
+      table
+      record-data
+      jdbc/snake-kebab-opts)))
 
 
 ;; Inserting multiple records
@@ -136,7 +140,12 @@
   - db-spec - database specification to establish a connection"
   [db-spec table columns record-data]
   (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/insert-multi! connection table columns record-data)))
+    (jdbc-sql/insert-multi!
+      connection
+      table
+      columns
+      record-data
+      jdbc/snake-kebab-opts)))
 
 
 (defn read-record
@@ -159,7 +168,11 @@
   - where-clause - column and value to identify a record to update"
   [db-spec table record-data where-clause]
   (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/update! connection table record-data where-clause)))
+    (jdbc-sql/update!
+      connection
+      table
+      record-data
+      where-clause jdbc/snake-kebab-opts)))
 
 
 (defn delete-record
