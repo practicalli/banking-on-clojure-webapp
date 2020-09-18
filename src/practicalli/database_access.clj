@@ -187,6 +187,29 @@
 
 
 
+;; Business Logic
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn new-account-holder
+  [customer-details]
+  (create-record
+    db-specification-dev
+    :public.account_holders
+    customer-details))
+
+
+(comment
+
+  (new-account-holder
+    #:practicalli.specification-banking{:first_name             "Rachel"
+                                        :last_name              "Requests"
+                                        :email_address          "rach@requests.org"
+                                        :residential_address    "1 Emotive Drive, Altar IV"
+                                        :social_security_number "AB140123D"})
+;; => #:account-holders{:account-holder-id #uuid "a7e7c9a3-b007-424f-8702-1c8908a8d8ba"}
+  )
+
+
 (comment
 
   ;; Create account holder
