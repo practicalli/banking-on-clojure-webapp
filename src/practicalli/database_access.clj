@@ -210,6 +210,20 @@
   )
 
 
+
+;; Instrument next.jdbc specifications
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Require the `next.jdbc.specs` library as jdbc-spec
+
+(comment
+  ;; Instrument all next.jdbc functions
+  (jdbc-spec/instrument)
+
+  ;; Remove instrumentation from all next.jdbc functions
+  (jdbc-spec/unstrument)
+
+  )
+
 (comment
 
   ;; Create account holder
