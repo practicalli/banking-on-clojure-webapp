@@ -41,33 +41,40 @@
 ;; defined in the practicalli.specifications namespace
 (spec/def ::country :practicalli.specifications/countries-of-the-world)
 
-(spec/def ::residential-address (spec/keys :req [::house-name-number ::street-name ::post-code]
-                                           :opt [::county ::country]))
+#_(spec/def ::residential-address (spec/keys :req [::house-name-number ::street-name ::post-code]
+                                             :opt [::county ::country]))
+
+;; Create a simpler specification for residential address
+(spec/def ::residential-address string?)
+
 
 (spec/def ::social-security-id-uk string?)
 (spec/def ::social-security-id-usa string?)
 
-(spec/def ::social-security-id (spec/or ::social-security-id-uk
-                                        ::social-security-id-usa))
+#_(spec/def ::social-security-id (spec/or ::social-security-id-uk
+                                          ::social-security-id-usa))
+
+;; Create a simpler specification for social security number
+(spec/def ::social-security-number string?)
 
 ;; composite customer details specification
 (spec/def ::customer-details
   (spec/keys
-    :req [::first-name ::last-name ::email-address ::residential-address ::social-security-id]))
+    :req [::first-name ::last-name ::email-address ::residential-address ::social-security-number]))
 
 
 ;; Account holder values
-(spec/def ::account-id uuid?)
+(spec/def ::account-holder-id uuid?)
 
 ;; Account holder - composite specification
 (spec/def ::account-holder
   (spec/keys
-    :req [::account-id
+    :req [::account-holder-id
           ::first-name
           ::last-name
           ::email-address
           ::residential-address
-          ::social-security-id]))
+          ::social-security-number]))
 
 
 ;; Generating data from specifications
@@ -95,48 +102,23 @@
   (spec-gen/sample (spec/gen ::customer-details))
   (spec-gen/sample (spec/gen ::account-holder))
 
-  )
 
-
-
-;; Banking function specifications
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(spec/fdef SUT/register-account-holder
-  :args (spec/cat :customer ::customer-details)
-  :ret ::account-holder)
-
-
-;; Banking function instrumentation
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(spec-test/instrument `SUT/register-account-holder)
-
-
-;; test the instrumentation of the function
-;; use bad data, should return spec error
-(comment
-
-  (SUT/register-account-holder {})
-
-  ;; Use specs to generate test data, should evaluate correctly
-  (SUT/register-account-holder
-    (spec-gen/generate
-      (spec/gen ::customer-details)))
-
-
-  (spec-test/unstrument `SUT/register-account-holder)
+  (spec-gen/generate (spec/gen ::customer-details))
 
   )
 
-;; spec check
+
+
+
+
+;; Mock data generators
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generative testing from specifications
-;; Generate 1000 data points from the arguments to a function spec
-;; Use that data to check the evaluation result against the return specification
+;; Functions to generate mock data from specifications
 
-(comment
+(defn mock-data-customer-details
+  []
+  (spec-gen/generate (spec/gen ::customer-details)))
 
-  (spec-test/check `SUT/register-account-holder)
-
-  )
+(defn mock-data-account-holder
+  []
+  (spec-gen/generate (spec/gen ::account-holder)))
