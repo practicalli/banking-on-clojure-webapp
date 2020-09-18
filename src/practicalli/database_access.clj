@@ -86,10 +86,7 @@
     (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
 
 
-(comment  ;; Managing Schemas
-
-  (create-table schema-transaction-history-table
-                db-specification-dev)
+(comment ;; Managing Schemas
 
   ;; Create all tables in the development database
   (create-tables! [schema-account-holders-table schema-accounts-table schema-transaction-history-table]
@@ -224,13 +221,16 @@
 
   )
 
+
+;; Rich Comment Block: using namespace API
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
 
   ;; Create account holder
   (create-record db-specification-dev
-                 "public.account_holders"
-                 {:account_holder_id      (java.util.UUID/randomUUID)
-                  :first_name             "Rachel"
+                 :public.account_holders
+                 {:first_name             "Rachel"
                   :last_name              "Rocketpack"
                   :email_address          "rach@rocketpack.org"
                   :residential_address    "1 Ultimate Question Lane, Altar IV"
@@ -277,30 +277,15 @@
 
   (read-record db-specification-dev ["select * from public.transaction_history"])
   (read-record db-specification-dev ["select * from public.transaction_history where transaction_reference = ?" "Salary"])
-  ;; => [#:TRANSACTION_HISTORY{:TRANSACTION_ID #uuid "8ac89cfc-6874-4ebe-9ee4-59b8c5e971ff", :TRANSACTION_REFERENCE "Salary", :TRANSACTION_DATE #inst "2020-09-10T23:00:00.000-00:00", :ACCOUNT_NUMBER 1234567890}]
   (read-record db-specification-dev ["select * from public.transaction_history where transaction_date = ?" "2020-09-11"])
 
 
-
-  ;; Mock data from specifications
-  ;; TODO:
-  ;; - require banking specifications namespace
-  ;; - call mock-data-* functions  mock-data-customer-details
-  ;; (practicalli.specifications-banking/mock-data-customer-details)
 
 
   )
 
 
-;; Instrument specifications
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Require the `next.jdbc.specs` library as jdbc-spec
 
-(comment
-  ;; Instrument all next.jdbc functions
-  (jdbc-spec/instrument)
 
-  ;; Remove instrumentation from all next.jdbc functions
-  (jdbc-spec/unstrument)
 
   )
