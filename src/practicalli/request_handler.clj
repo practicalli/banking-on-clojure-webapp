@@ -3,11 +3,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (ns practicalli.request-handler
-  (:require [ring.util.response :refer [response]]
-            [hiccup.core :refer [html]]
-            [hiccup.page :refer [html5 include-js include-css]]
-            [hiccup.element :refer [link-to]]
-            [practicalli.database-access :as data-store]))
+  (:require
+   ;; Web Application
+   [ring.util.response :refer [response]]
+   [hiccup.core :refer [html]]
+   [hiccup.page :refer [html5 include-js include-css]]
+   [hiccup.element :refer [link-to]]
+
+   ;; Data access
+   [practicalli.database-access :as data-store]))
 
 
 ;; Markup Generators
