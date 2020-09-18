@@ -1,12 +1,13 @@
 (ns practicalli.specifications-banking
-  (:require [clojure.spec.alpha :as spec]
-            [clojure.spec.gen.alpha :as spec-gen]
-            [clojure.spec.test.alpha :as spec-test]
+  (:require
+   ;; Clojure Specifications
+   [clojure.spec.alpha :as spec]
+   [clojure.spec.gen.alpha :as spec-gen]
+   [clojure.spec.test.alpha :as spec-test]
+   [practicalli.specifications]
 
-            [clojure.string]
-
-            [practicalli.specifications]
-            [practicalli.database-access :as SUT]))
+   ;; Helper namespaces
+   [clojure.string]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

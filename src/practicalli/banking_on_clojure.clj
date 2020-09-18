@@ -3,10 +3,7 @@
   (:require
    [org.httpkit.server :as app-server]
    [compojure.core :refer [defroutes GET POST]]
-   [practicalli.request-handler :as handler]
-
-   ;; Specifications - for kaocha discovery
-   [practicalli.specifications-banking]))
+   [practicalli.request-handler :as handler]))
 
 
 ;; Request Routing

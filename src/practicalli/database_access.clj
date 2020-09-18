@@ -3,9 +3,6 @@
             [next.jdbc.sql :as jdbc-sql]
             [next.jdbc.specs :as jdbc-spec]))
 
-;; Clojure specifications
-[practicalli.specifications-banking]
-
 
 ;; Database specification and connection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
