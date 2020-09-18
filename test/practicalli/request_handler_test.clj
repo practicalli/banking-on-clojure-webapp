@@ -1,7 +1,17 @@
 (ns practicalli.request-handler-test
-  (:require [practicalli.request-handler :as SUT]
-            [clojure.test :refer [deftest is testing]]
-            [ring.mock.request :as mock]))
+  (:require
+   ;; Unit testing
+   [clojure.test :refer [deftest is testing]]
+   [ring.mock.request :as mock]
+
+   ;; Clojure Spec and Generative testing
+   [clojure.spec.alpha :as spec]
+   [clojure.spec.gen.alpha :as spec-gen]
+   [clojure.spec.test.alpha :as spec-test]
+
+   ;; System under test
+   [practicalli.request-handler :as SUT]))
+
 
 (deftest welcome-page-test
   (testing "Testing elements on the welcome page"
@@ -32,4 +42,5 @@
 (deftest register-account-holder-test
   (testing "Testing elements on the register account holder page"
     (is (= 200
-           (:status (SUT/account-history (mock/request :get "/register-account-holder")))))))
+           (:status (SUT/account-history (mock/request :get "/register-account-holder")))))
+    #_(is (valid? ))))

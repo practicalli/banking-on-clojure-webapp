@@ -279,13 +279,4 @@
   (read-record db-specification-dev ["select * from public.transaction_history where transaction_reference = ?" "Salary"])
   (read-record db-specification-dev ["select * from public.transaction_history where transaction_date = ?" "2020-09-11"])
 
-
-
-
-  )
-
-
-
-
-
   )
