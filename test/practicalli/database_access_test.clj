@@ -1,3 +1,10 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DEPRECATED
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (ns practicalli.database-access-test
   (:require
    ;; Unit testing
@@ -13,12 +20,20 @@
    [practicalli.database-access :as SUT])
   )
 
+;;
+#_(deftest new-account-holder-test
+    (testing "Registered account holder is valid specification"
+      (is (spec/valid? :practicalli.specifications-banking/account-holder-id
+                       (SUT/new-account-holder
+                         (spec-gen/generate
+                           (spec/gen :practicalli.specifications-banking/customer-details)))))))
 
-(deftest new-account-holder-test
-  (testing "Registered account holder is valid specification"
-    (is (map? (SUT/new-account-holder
-                (spec-gen/generate
-                  (spec/gen :practicalli.specifications-banking/customer-details)))))))
+
+#_(deftest new-account-holder-test
+    (testing "Registered account holder is valid specification"
+      (is (map? (SUT/new-account-holder
+                  (spec-gen/generate
+                    (spec/gen :practicalli.specifications-banking/customer-details)))))))
 
 
 
