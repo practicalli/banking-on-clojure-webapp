@@ -1,7 +1,9 @@
 (ns practicalli.database-access
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as jdbc-sql]
-            [next.jdbc.specs :as jdbc-spec]))
+            [next.jdbc.specs :as jdbc-spec]
+
+            [practicalli.specifications-banking]))
 
 
 ;; Database specification and connection
@@ -198,12 +200,16 @@
 (comment
 
   (new-account-holder
+    (practicalli.specifications-banking/mock-data-customer-details))
+;; => #:account-holders{:account-holder-id #uuid "036ecad3-138d-4467-b161-56cbcb9730aa"}
+
+  (new-account-holder
     #:practicalli.specification-banking{:first_name             "Rachel"
                                         :last_name              "Requests"
                                         :email_address          "rach@requests.org"
                                         :residential_address    "1 Emotive Drive, Altar IV"
                                         :social_security_number "AB140123D"})
-;; => #:account-holders{:account-holder-id #uuid "a7e7c9a3-b007-424f-8702-1c8908a8d8ba"}
+  ;; => #:account-holders{:account-holder-id #uuid "a7e7c9a3-b007-424f-8702-1c8908a8d8ba"}
   )
 
 
