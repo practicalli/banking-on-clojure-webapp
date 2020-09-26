@@ -1,4 +1,11 @@
-(ns practicalli.specifications
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DEPRECATED
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(ns practicalli.deprecated.specifications
   (:require [clojure.spec.alpha :as spec]))
 
 (spec/def ::countries-of-the-world

@@ -5,7 +5,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(ns practicalli.database-access-test
+(ns practicalli.deprecated.database-access-test
   (:require
    ;; Unit testing
    [clojure.test :refer [deftest is testing]]

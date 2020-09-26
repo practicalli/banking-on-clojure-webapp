@@ -5,7 +5,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(ns practicalli.database-access-initial-design
+(ns practicalli.deprecated.database-access-initial-design
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as jdbc-sql]
             [next.jdbc.specs :as jdbc-spec]

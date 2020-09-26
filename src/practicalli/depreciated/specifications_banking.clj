@@ -1,4 +1,11 @@
-(ns practicalli.specifications-banking
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DEPRECATED
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(ns practicalli.deprecated.specifications-banking
   (:require
    ;; Clojure Specifications
    [clojure.spec.alpha :as spec]
