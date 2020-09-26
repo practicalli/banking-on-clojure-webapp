@@ -15,9 +15,7 @@
   (GET "/account"  [] handler/account-history)
   (GET "/transfer" [] handler/money-transfer)
   (GET "/payment"  [] handler/money-payment)
-
-  (GET "/register" [] handler/register-account-holder) )
-
+  (GET "/register" [] handler/register-customer) )
 
 
 ;; System

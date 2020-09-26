@@ -11,7 +11,7 @@
    [hiccup.element :refer [link-to]]
 
    ;; Data access
-   [practicalli.database-access :as data-store]))
+   [practicalli.hanlder-helpers :as helper]))
 
 
 ;; Markup Generators
@@ -72,19 +72,21 @@
        ])))
 
 
-(defn register-account-holder
+(defn register-customer
   [request]
-  (response (html [:div
-                   [:h1 "Banking on Clojure"]
-                   [:p "New account holder" ]
-                   (data-store/new-account-holder
-                     #:practicalli.specifications-banking{:first_name             "Rachel"
-                                                          :last_name              "Hardcoded"
-                                                          :email_address          "rach@hardcoded.org"
-                                                          :residential_address    "1 Hard Code Drive, Altar IV"
-                                                          :social_security_number "xx104312D"})
+  (response
+    (html
+      [:div
+       [:h1 "Banking on Clojure"]
+       [:p "New account holder" ]
+       (helper/new-customer
+         #:customer{:legal-name             "Terry Able"
+                    :email_address          "terry@able.org"
+                    :residential_address    "1 Hard Code Drive, Altar IV"
+                    :social_security_number "xx104312D"
+                    :preferred_name         "Terri"})
 
-                   [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]])))
+       [:img {:src "https://raw.githubusercontent.com/jr0cket/developer-guides/master/clojure/clojure-piggy-bank.png"}]])))
 
 
 (defn accounts-overview-page
@@ -123,7 +125,6 @@
                                     :account-value "354,000"          :account-sort-code "01-02-01"})
 
         ]])))
-
 
 
 (defn account-history
