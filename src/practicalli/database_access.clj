@@ -24,7 +24,7 @@
 
 
 (def schema-account-holders-table
-  ["CREATE TABLE PUBLIC.ACCOUNT_HOLDERS(
+  ["CREATE TABLE IF NOT EXISTS PUBLIC.ACCOUNT_HOLDERS(
      ACCOUNT_HOLDER_ID UUID DEFAULT RANDOM_UUID() NOT NULL,
      FIRST_NAME VARCHAR(32),
      LAST_NAME VARCHAR(32),
@@ -171,7 +171,8 @@
       connection
       table
       record-data
-      where-clause jdbc/snake-kebab-opts)))
+      where-clause
+      jdbc/snake-kebab-opts)))
 
 
 (defn delete-record
