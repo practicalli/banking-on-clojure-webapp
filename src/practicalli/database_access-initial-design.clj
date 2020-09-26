@@ -1,30 +1,40 @@
-(ns practicalli.database-access
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DEPRECATED
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(ns practicalli.database-access-initial-design
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as jdbc-sql]
             [next.jdbc.specs :as jdbc-spec]
 
             [practicalli.specifications-banking]))
 
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
 
-;; Database specification and connection
+  ;; Database specification and connection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Development environment
-;; H2 in-memory database
-(def db-specification-dev {:dbtype "h2" :dbname "banking-on-clojure"})
+  ;; Development environment
+  ;; H2 in-memory database
+  (def db-specification-dev {:dbtype "h2" :dbname "banking-on-clojure"})
 
 
-;; Database schema
+  ;; Database schema
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; define the schema to create each table
-;; constraints used to define explicitly named primary keys to aid debugging and maintenance
-;; Using meaningful constraint names as they will appear in error messages and make issues easier to trace.
-;; Also helps with the maintenance of the database overall.
+  ;; define the schema to create each table
+  ;; constraints used to define explicitly named primary keys to aid debugging and maintenance
+  ;; Using meaningful constraint names as they will appear in error messages and make issues easier to trace.
+  ;; Also helps with the maintenance of the database overall.
 
 
-(def schema-account-holders-table
-  ["CREATE TABLE IF NOT EXISTS PUBLIC.ACCOUNT_HOLDERS(
+  (def schema-account-holders-table
+    ["CREATE TABLE IF NOT EXISTS PUBLIC.ACCOUNT_HOLDERS(
      ACCOUNT_HOLDER_ID UUID DEFAULT RANDOM_UUID() NOT NULL,
      FIRST_NAME VARCHAR(32),
      LAST_NAME VARCHAR(32),
@@ -33,8 +43,8 @@
      SOCIAL_SECURITY_NUMBER VARCHAR(32),
      CONSTRAINT ACCOUNT_HOLDERS_PK PRIMARY KEY (ACCOUNT_HOLDER_ID))"])
 
-(def schema-accounts-table
-  ["CREATE TABLE PUBLIC.ACCOUNTS(
+  (def schema-accounts-table
+    ["CREATE TABLE PUBLIC.ACCOUNTS(
      ACCOUNT_NUMBER INTEGER NOT NULL IDENTITY,
      ACCOUNT_SORT_CODE VARCHAR(6),
      ACCOUNT_NAME VARCHAR(32),
@@ -43,8 +53,8 @@
      ACCOUNT_HOLDER_ID VARCHAR(100) NOT NULL,
      CONSTRAINT ACCOUNTS_PK PRIMARY KEY (ACCOUNT_NUMBER))"] )
 
-(def schema-transaction-history-table
-  ["CREATE TABLE PUBLIC.TRANSACTION_HISTORY(
+  (def schema-transaction-history-table
+    ["CREATE TABLE PUBLIC.TRANSACTION_HISTORY(
      TRANSACTION_ID UUID DEFAULT RANDOM_UUID() NOT NULL,
      TRANSACTION_REFERENCE VARCHAR(32),
      TRANSACTION_DATE DATE,
@@ -52,40 +62,43 @@
      CONSTRAINT TRANSACTION_HISTORY_PK PRIMARY KEY (TRANSACTION_ID))"])
 
 
-;; Database schema - helper functions
+  ;; Database schema - helper functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; define a function to open a database connect, create all table schema as a transaction and then close the connection.
-;; TODO: remove `with-open` when using a connection pool
-;; pass pool connection to `jdbc/with-transaction`
+  ;; define a function to open a database connect, create all table schema as a transaction and then close the connection.
+  ;; TODO: remove `with-open` when using a connection pool
+  ;; pass pool connection to `jdbc/with-transaction`
 
 
-(defn create-tables!
-  "Establish a connection to the data source and create all tables within a transaction.
+  (defn create-tables!
+    "Establish a connection to the data source and create all tables within a transaction.
   Close the database connection.
   Arguments:
   - table-schemas: a vector of sql statements, each creating a table
   - data-spec: next.jdbc database specification"
-  [table-schemas data-spec]
+    [table-schemas data-spec]
 
-  (with-open [connection (jdbc/get-connection data-spec)]
-    (jdbc/with-transaction [transaction connection]
-      (doseq [sql-statement table-schemas]
-        (jdbc/execute! transaction sql-statement) ))))
+    (with-open [connection (jdbc/get-connection data-spec)]
+      (jdbc/with-transaction [transaction connection]
+        (doseq [sql-statement table-schemas]
+          (jdbc/execute! transaction sql-statement) ))))
 
-;; could also use `clojure.core/run!` instead of `doseq`
-
-
-(defn show-schema
-  [db-spec table-name]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc/execute! connection [(str "SHOW COLUMNS FROM " table-name)])))
+  ;; could also use `clojure.core/run!` instead of `doseq`
 
 
-(defn drop-table
-  [db-spec table-name]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
+  (defn show-schema
+    [db-spec table-name]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc/execute! connection [(str "SHOW COLUMNS FROM " table-name)])))
+
+
+  (defn drop-table
+    [db-spec table-name]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc/execute! connection [(str "DROP TABLE " table-name)])))
+
+
+  ) ;; End of rich comment block
 
 
 (comment ;; Managing Schemas
@@ -109,100 +122,104 @@
 
   )
 
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
 
-;; Create, Read, Update, Delete
+  ;; Create, Read, Update, Delete
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn create-record
-  "Insert a single record into the database using a managed connection.
+  (defn create-record
+    "Insert a single record into the database using a managed connection.
   Arguments:
   - table - name of database table to be affected
   - record-data - Clojure data representing a new record
   - db-spec - database specification to establish a connection"
-  [db-spec table record-data]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/insert!
-      connection
-      table
-      record-data
-      jdbc/snake-kebab-opts)))
+    [db-spec table record-data]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc-sql/insert!
+        connection
+        table
+        record-data
+        jdbc/snake-kebab-opts)))
 
 
-;; Inserting multiple records
+  ;; Inserting multiple records
 
-(defn create-records
-  "Insert a single record into the database using a managed connection.
+  (defn create-records
+    "Insert a single record into the database using a managed connection.
   Arguments:
   - table - name of database table to be affected
   - columns - vector of column names for which values are provided
   - record-data - Clojure vector representing a new records
   - db-spec - database specification to establish a connection"
-  [db-spec table columns record-data]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/insert-multi!
-      connection
-      table
-      columns
-      record-data
-      jdbc/snake-kebab-opts)))
+    [db-spec table columns record-data]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc-sql/insert-multi!
+        connection
+        table
+        columns
+        record-data
+        jdbc/snake-kebab-opts)))
 
 
-(defn read-record
-  "Insert a single record into the database using a managed connection.
+  (defn read-record
+    "Insert a single record into the database using a managed connection.
   Arguments:
   - table - name of database table to be affected
   - record-data - Clojure data representing a new record
   - db-spec - database specification to establish a connection"
-  [db-spec sql-query]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/query connection sql-query)))
+    [db-spec sql-query]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc-sql/query connection sql-query)))
 
 
-(defn update-record
-  "Insert a single record into the database using a managed connection.
+  (defn update-record
+    "Insert a single record into the database using a managed connection.
   Arguments:
   - table - name of database table to be affected
   - record-data - Clojure data representing a new record
   - db-spec - database specification to establish a connection
   - where-clause - column and value to identify a record to update"
-  [db-spec table record-data where-clause]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/update!
-      connection
-      table
-      record-data
-      where-clause
-      jdbc/snake-kebab-opts)))
+    [db-spec table record-data where-clause]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc-sql/update!
+        connection
+        table
+        record-data
+        where-clause
+        jdbc/snake-kebab-opts)))
 
 
-(defn delete-record
-  "Insert a single record into the database using a managed connection.
+  (defn delete-record
+    "Insert a single record into the database using a managed connection.
   Arguments:
   - table - name of database table to be affected
   - record-data - Clojure data representing a new record
   - db-spec - database specification to establish a connection"
-  [db-spec table where-clause]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc-sql/delete! connection table where-clause)))
+    [db-spec table where-clause]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc-sql/delete! connection table where-clause)))
 
 
 
-;; Business Logic
+  ;; Business Logic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn new-account-holder
-  [customer-details]
-  (create-record
-    db-specification-dev
-    :public.account_holders
-    customer-details))
+  (defn new-account-holder
+    [customer-details]
+    (create-record
+      db-specification-dev
+      :public.account_holders
+      customer-details))
 
+  ) ;; End of rich comment block
 
 (comment
 
   (new-account-holder
     (practicalli.specifications-banking/mock-data-customer-details))
-;; => #:account-holders{:account-holder-id #uuid "036ecad3-138d-4467-b161-56cbcb9730aa"}
+  ;; => #:account-holders{:account-holder-id #uuid "036ecad3-138d-4467-b161-56cbcb9730aa"}
 
   (new-account-holder
     #:practicalli.specification-banking{:first_name             "Rachel"
