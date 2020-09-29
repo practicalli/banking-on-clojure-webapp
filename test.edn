@@ -1,3 +1,0 @@
-#kaocha/v1
-{:tests [{:type :kaocha.type/spec.test.check
-          :id   :generative-fdef-checks}]}
