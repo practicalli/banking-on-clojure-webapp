@@ -4,14 +4,13 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(ns practicalli.data.schema
-  (:require [next.jdbc :as jdbc]))
+(ns practicalli.data.schema)
 
 
-;; Database tables
+;; Create Database tables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def schema-customer
+(def customer-create
   ["create table if not exists public.customer (
 
      id                     uuid         default random_uuid() not null,
@@ -24,7 +23,7 @@
      constraint customer_pk primary key (id))"])
 
 
-(def schema-account
+(def account-create
   ["create table if not exists public.account (
 
      number          integer not null identity,
@@ -37,7 +36,7 @@
      constraint account_pk primary key (number))"] )
 
 
-(def schema-transaction
+(def transaction-create
   ["create table if not exists public.transaction (
 
      id             uuid default random_uuid() not null,
@@ -49,6 +48,32 @@
      constraint transaction_pk primary key (id))"])
 
 
+;; Delete Database tables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def customer-drop
+  ["drop table if exists public.customer"])
+
+(def account-drop
+  ["drop table if exists public.account"])
+
+(def transaction-drop
+  ["drop table if exists public.transaction"])
+
+
+
+;; View Database tables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def customer-table
+  ["show columns from public.customer"])
+
+(def account-table
+  ["show columns from public.account"])
+
+(def transaction-table
+  ["show columns from public.transaction"])
+
 
 
 ;; Database schema - helper functions
@@ -59,42 +84,52 @@
 ;; pass pool connection to `jdbc/with-transaction`
 
 
-(defn create-tables!
-  "Establish a connection to the data source and create all tables within a transaction.
+#_(defn create-tables
+    "Establish a connection to the data source and create all tables within a transaction.
   Close the database connection.
   Arguments:
   - table-schemas: a vector of sql statements, each creating a table
   - data-spec: next.jdbc database specification"
-  [table-schemas data-spec]
+    [table-schemas data-spec]
 
-  (with-open [connection (jdbc/get-connection data-spec)]
-    (jdbc/with-transaction [transaction connection]
-      (doseq [sql-statement table-schemas]
-        (jdbc/execute! transaction sql-statement) ))))
+    (with-open [connection (jdbc/get-connection data-spec)]
+      (jdbc/with-transaction [transaction connection]
+        (doseq [sql-statement table-schemas]
+          (jdbc/execute! transaction sql-statement) ))))
 
 ;; could also use `clojure.core/run!` instead of `doseq`
 
 
-(defn show-schema
-  "Show the columns and types that define the table schema
+#_(defn show-schema
+    "Show the columns and types that define the table schema
    Arguments:
   - table-schemas: a vector of sql statements, each creating a table
   - data-spec: next.jdbc database specification"
-  [db-spec table-name]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc/execute! connection [(str "show columns from " table-name)])))
+    [db-spec table-name]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc/execute! connection [(str "show columns from " table-name)])))
 
 
-(defn drop-table
-  "Drop table in database if it exists
+#_(defn drop-table
+    "Drop table in database if it exists
   Arguments:
   - next.jdbc database specification
   - string of table name to drop from database
   Returns:
   - next.jdbc hash-map of result, 1=table dropped, 0=table does not exist"
-  [db-spec table-name]
-  (with-open [connection (jdbc/get-connection db-spec)]
-    (jdbc/execute! connection [(str "drop table if exists " table-name)])))
+    [db-spec table-name]
+    (with-open [connection (jdbc/get-connection db-spec)]
+      (jdbc/execute! connection [(str "drop table if exists " table-name)])))
+
+
+#_(defn drop-tables
+    [sql-statements data-spec]
+    (with-open [connection (jdbc/get-connection data-spec)]
+      (jdbc/with-transaction [transaction connection]
+        (doseq [sql-statement sql-statements]
+          (jdbc/execute! transaction sql-statement)))))
+
+
 
 
 
@@ -105,8 +140,8 @@
              :refer [db-spec-dev db-spec-staging db-spec]])
 
   ;; Create all tables in the development database
-  (create-tables! [schema-customer schema-account schema-transaction]
-                  db-spec-dev)
+  (create-tables [schema-customer schema-account schema-transaction]
+                 db-spec-dev)
 
 
   ;; View application table schema in development database
@@ -143,6 +178,7 @@
   (drop-table db-spec-staging "public.customer")
   (drop-table db-spec-staging "public.account")
   (drop-table db-spec-staging "public.transaction")
+
 
   ) ;; End of rich comment block
 
