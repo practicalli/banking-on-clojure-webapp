@@ -1,7 +1,7 @@
 (ns practicalli.handler-helpers-test
   (:require
    ;; Unit testing
-   [clojure.test :refer [deftest is testing]]
+   [clojure.test :refer [deftest is testing use-fixtures]]
 
    ;; Specifications and Generative testing
    [clojure.spec.alpha :as spec]
@@ -11,7 +11,22 @@
    ;; System under test
    [practicalli.hanlder-helpers :as SUT]))
 
-;; TODO setup database...
+;; TODO fixtures to setup database...
+;; once: create / clean the database by dropping tables then creating tables
+;; each: where we are using pre-existing data - drop-create-insert ??
+
+(defn database-reset-fixture
+  "Setup: drop all tables, creates new tables
+   Teardown: drop all tables
+  SQL schema code has if clauses to avoid errors running SQL code.
+  Arguments:
+  test-function - a function to run a specific test"
+  [test-function]
+  (SUT/create-database)
+  (test-function)
+  (SUT/delete-database))
+
+(use-fixtures :each database-reset-fixture)
 
 
 (deftest new-customer-test
@@ -21,7 +36,6 @@
         (:customer/id (SUT/new-customer
                         (spec-gen/generate (spec/gen :customer/unregistered))))))
   )
-
 
 
 ;; Rich comment block with redefined vars ignored
