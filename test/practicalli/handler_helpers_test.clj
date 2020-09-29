@@ -15,9 +15,11 @@
 
 
 (deftest new-customer-test
-  (is (spec/valid? :customer/id
-                   (:id (SUT/new-customer
-                          (spec-gen/generate (spec/gen :customer/unregistered))))))
+  (testing "New customer generative testing")
+  (is (spec/valid?
+        :customer/id
+        (:customer/id (SUT/new-customer
+                        (spec-gen/generate (spec/gen :customer/unregistered))))))
   )
 
 
