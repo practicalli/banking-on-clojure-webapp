@@ -1,7 +1,43 @@
 (ns practicalli.data.access
   (:require
    [next.jdbc       :as jdbc]
-   [next.jdbc.sql   :as jdbc-sql]))
+   [next.jdbc.sql   :as jdbc-sql]
+
+   [practicalli.data.schema :as schema]))
+
+
+;; Helper functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn execute-transaction
+  [sql-statements data-spec]
+  (with-open [connection (jdbc/get-connection data-spec)]
+    (jdbc/with-transaction [transaction connection]
+      (doseq [sql-statement sql-statements]
+        (jdbc/execute! transaction sql-statement)))))
+
+
+;; Schema management
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn create-tables
+  "Delete all database tables"
+  [db-spec]
+  (execute-transaction
+    [schema/customer-drop schema/account-drop schema/transaction-drop] db-spec)
+  (execute-transaction
+    [schema/customer-create schema/account-create schema/transaction-create] db-spec))
+
+(defn delete-tables
+  "Reset all database tables"
+  [db-spec]
+  (execute-transaction
+    [schema/customer-drop schema/account-drop schema/transaction-drop] db-spec))
+
+(defn show-table
+  [db-spec sql-statement]
+  (with-open [connection (jdbc/get-connection db-spec)]
+    (jdbc/execute! connection sql-statement)))
 
 
 ;; Create, Read, Update, Delete
