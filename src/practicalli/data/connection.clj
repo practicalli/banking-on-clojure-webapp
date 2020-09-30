@@ -6,8 +6,7 @@
 ;; - TODO: connection pool
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(ns practicalli.data.connection
-  (:require [next.jdbc :as jdbc]))
+(ns practicalli.data.connection)
 
 
 ;; H2 database - embedded relational db
@@ -19,17 +18,16 @@
   {:dbtype "h2" :dbname "banking-on-clojure"})
 
 
-
 ;; Heroku Postgres database - PostgreSQL as a service
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec-staging
   "PostgreSQL Staging database specification for next.jdbc"
-  (jdbc/get-datasource (System/getenv "JDBC_DATABASE_URL_STAGING")) )
+  (System/getenv "JDBC_DATABASE_URL_STAGING"))
 
 (def db-spec
   "PostgreSQL production database specification for next.jdbc"
-  (jdbc/get-datasource (System/getenv "JDBC_DATABASE_URL")) )
+  (System/getenv "JDBC_DATABASE_URL"))
 
 
 ;; Create environment variables using Heroku CLI tool
@@ -50,6 +48,8 @@
 ;; Rich comment block with redefined vars ignored
 #_{:clj-kondo/ignore [:redefined-var]}
 (comment
+
+  (:require '[next.jdbc :as jdbc])
 
   (defn information-tables
     [data-source]
