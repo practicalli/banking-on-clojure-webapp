@@ -18,11 +18,12 @@ clojure -A:test:runner
 ```
 
 ## Running the code
-Use the `-m` option to set the main namespace to inform Clojure where it can find the `-main` function to start the code running.
+Use the `-M -m` option to set the main namespace to inform Clojure where it can find the `-main` function to start the code running.
 
 ```shell
-clojure -m practicalli.banking-on-clojure-webapp
+clojure -M -m practicalli.banking-on-clojure
 ```
+> Use the `-m` option by itself if using Clojure CLI tools version before 1.10.1.697
 
 ## Packaging / Deployment
 Clojure is deployed as a Java archive (jar) file, an archive created using zip compression.  To package the code to run in a JVM environment, an uberjar is created which included the project code and the Clojure standard library.  This is called an uberjar.
