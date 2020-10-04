@@ -14,7 +14,7 @@
   (with-open [connection (jdbc/get-connection data-spec)]
     (jdbc/with-transaction [transaction connection]
       (doseq [sql-statement sql-statements]
-        (jdbc/execute! transaction sql-statement)))))
+        (jdbc/execute-one! transaction sql-statement)))))
 
 
 ;; Schema management
