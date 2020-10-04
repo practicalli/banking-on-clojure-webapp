@@ -9,7 +9,7 @@
 ;; Helper functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn execute-transaction
+(defn ^:private execute-transaction
   "Execute SQL statements within a transaction, for a given database source"
   [sql-statements data-spec]
   (with-open [connection (jdbc/get-connection data-spec)]
