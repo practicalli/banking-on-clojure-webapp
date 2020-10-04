@@ -21,19 +21,19 @@
 ;; Schema management
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn create-tables
-  "Delete all database tables"
-  [db-spec]
-  (execute-transaction
-    [schema/customer-drop schema/account-drop schema/transaction-drop] db-spec)
-  (execute-transaction
-    [schema/customer-create schema/account-create schema/transaction-create] db-spec))
-
 (defn delete-tables
   "Reset all database tables"
   [db-spec]
   (execute-transaction
     [schema/customer-drop schema/account-drop schema/transaction-drop] db-spec))
+
+(defn create-tables
+  "Delete all database tables"
+  [db-spec]
+  (delete-tables db-spec)
+  (execute-transaction
+    [schema/customer-create schema/account-create schema/transaction-create] db-spec))
+
 
 (defn show-table
   [db-spec sql-statement]
