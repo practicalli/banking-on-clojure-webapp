@@ -29,13 +29,23 @@
 (use-fixtures :each database-reset-fixture)
 
 
-(deftest new-customer-test
-  (testing "New customer generative testing")
-  (is (spec/valid?
-        :customer/id
-        (:customer/id (SUT/new-customer
-                        (spec-gen/generate (spec/gen :customer/unregistered))))))
-  )
+;; DONE: add test selector
+
+(deftest ^:database new-customer-test
+  (testing "New customer generative testing"
+    (is (spec/valid?
+          :customer/id
+          (:customer/id (SUT/new-customer
+                          (spec-gen/generate (spec/gen :customer/unregistered))))))))
+
+
+(deftest ^:kaocha/skip-test new-transaction-test
+  (testing "New customer generative testing"
+    (is (spec/valid?
+          :customer/id
+          (:customer/id (SUT/new-customer
+                          (spec-gen/generate (spec/gen :customer/unregistered))))))))
+
 
 
 ;; Rich comment block with redefined vars ignored
